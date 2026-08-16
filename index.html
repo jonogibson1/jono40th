@@ -644,7 +644,8 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function(){
+(function(){
+  function __init(){
   var DB = {
     url: 'https://kyjrqpibtncvhxwcaovx.supabase.co/rest/v1/party40_kv',
     key: 'sb_publishable_Q-XPiRdglnQscTd1Alh5UQ_hs4TWIsc',
@@ -735,7 +736,10 @@ document.addEventListener('DOMContentLoaded', function(){
   /* ---------- initial load + gentle live refresh ---------- */
   loadAppr(); loadC();
   setInterval(function(){ if(document.visibilityState === 'visible'){ loadAppr(); loadC(); } }, 15000);
-});
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', __init); }
+  else { __init(); }
+})();
 </script>
 
 </body>
