@@ -174,26 +174,7 @@
   }
 </style>
 
-<script>
-// live backend: Supabase REST (anon key is public-by-design)
-window.PARTY_DB = {
-  url: 'https://kyjrqpibtncvhxwcaovx.supabase.co/rest/v1/party40_kv',
-  key: 'sb_publishable_Q-XPiRdglnQscTd1Alh5UQ_hs4TWIsc',
-  headers: function(){ return {'apikey': this.key, 'Authorization': 'Bearer '+this.key, 'Content-Type': 'application/json'}; },
-  list: async function(prefix){
-    var r = await fetch(this.url+'?k=like.'+encodeURIComponent(prefix)+'*&select=k,v&order=k', {headers: this.headers()});
-    return r.ok ? r.json() : [];
-  },
-  set: async function(k, v){
-    var r = await fetch(this.url, {method:'POST', headers: Object.assign(this.headers(), {'Prefer':'resolution=merge-duplicates'}), body: JSON.stringify([{k:k, v:v}])});
-    if(!r.ok) throw new Error('set failed '+r.status);
-  },
-  del: async function(k){
-    var r = await fetch(this.url+'?k=eq.'+encodeURIComponent(k), {method:'DELETE', headers: this.headers()});
-    if(!r.ok) throw new Error('del failed '+r.status);
-  }
-};
-</script>
+
 </head>
 <body>
 
@@ -201,7 +182,7 @@ window.PARTY_DB = {
   <div class="wrap">
     <div class="eyebrow">Easter · 26 to 29 March 2027 · QLD school holidays to 11 April</div>
     <h1>Jono is 40.<br>Bring the families.<br><span class="mary-word">Caesars at 7.</span></h1>
-    <p class="standfirst">Twelve people at most, three families, a pool, distance from the general public, and enough luxury to justify the drive. Houses are ranked by the Caesar Index, defined below, and judged against the demands of The Breakfast. Every price below was pulled live from the booking platforms on 16 August 2026 for 12 guests, fees included.</p>
+    <p class="standfirst">Twelve people at most, three families, a pool, distance from the general public, and enough luxury to justify the drive. Houses are ranked by the Caesar Index, defined below, and judged against the demands of The Breakfast, the noon ritual detailed below. Every price below was pulled live from the booking platforms on 16 August 2026 for 12 guests, fees included. Easter weekend is the one window that works for both QLD and NSW school families: QLD holidays run 26 March to 11 April 2027, NSW autumn holidays start 12 April, so the long weekend itself is the only overlap. That is why the shortlist centres on 26 to 29 March.</p>
     <div class="facts">
       <div class="fact"><div class="k">The birthday</div><div class="v">Sat 27 Mar 2027</div></div>
       <div class="fact"><div class="k">It is also</div><div class="v">Easter Saturday</div></div>
@@ -542,14 +523,15 @@ window.PARTY_DB = {
 
 <section style="background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
-    <div class="eyebrow" style="color:var(--brass)">Saturday, 27 March 2027 · approx. noon</div>
+    <div class="eyebrow" style="color:var(--brass)">Saturday, 27 March 2027 · around noon</div>
     <h2>The Breakfast</h2>
-    <p class="sub">On the morning of the 40th, the host will be recreating Hunter S. Thompson's legendary breakfast, the one he insisted on wherever he was, whatever the hour of collapse the night before, and described as a psychological anchor to the day. Per the original doctrine it is eaten alone, at around noon, outdoors on a terrace, and preferably naked, a dress code the Caesar Index was engineered to protect. Guests may participate or watch from a safe distance.</p>
+    <p class="sub">The morning of the 40th runs to a particular doctrine. Breakfast here is a personal ritual, observed alone, in a spirit of genuine excess. The food factor is massive and the dress code is set by the Caesar Index. Guests may join or keep a respectful distance.</p>
     <div class="cards" style="grid-template-columns:repeat(auto-fill,minmax(250px,1fr))">
-      <div class="card"><div class="body"><div class="tag">The liquids</div><div class="meta">Four Caesars (the Thompson spec calls for the tomato-based classic; this household runs the superior Canadian build), a pot of coffee, a quart of milk, and two margaritas held in reserve for the back half.</div></div></div>
-      <div class="card"><div class="body"><div class="tag">The plates</div><div class="meta">Two grapefruits, crêpes, half a pound of corned beef hash with diced chillies, a Spanish omelette or eggs Benedict depending on the mood of the kitchen, and a chopped lemon for random seasoning.</div></div></div>
-      <div class="card"><div class="body"><div class="tag">The finish</div><div class="meta">A slice of key lime pie. And, for the historical record and because this page was instructed to print it warts and all: Thompson's original spec ends the meal with six lines of the best cocaine, for dessert. That course is noted for literary completeness and is not on the menu in 2027; the key lime pie will have to carry the ending on its own.</div></div></div>
-      <div class="card"><div class="body"><div class="tag">What it demands of the house</div><div class="meta">A verandah or terrace big enough for the full spread, a kitchen that can run four burners at once, and a Caesar Index of at least two so the dress code survives contact with the neighbours. This requirement shaped the whole shortlist.</div></div></div>
+      <div class="card"><div class="body"><div class="tag">The liquids</div><div class="meta">Four Caesars, a pot of coffee, a quart of milk, and two margaritas held in reserve for the back half.</div></div></div>
+      <div class="card"><div class="body"><div class="tag">The plates</div><div class="meta">Two grapefruits, Rangoon crepes, a half-pound of sausage, bacon or corned beef hash with diced chiles, a Spanish omelette or eggs Benedict, and a chopped lemon for random seasoning.</div></div></div>
+      <div class="card"><div class="body"><div class="tag">The finish</div><div class="meta">A slice of Key lime pie. The full spec runs a little further into the realm of the ill-advised; this production stops at the pie and lets it carry the ending.</div></div></div>
+      <div class="card"><div class="body"><div class="tag">The rest of the table</div><div class="meta">Two or three newspapers, all mail and messages, a telephone, a notebook for planning the next twenty-four hours, and at least one source of good music.</div></div></div>
+      <div class="card"><div class="body"><div class="tag">Where</div><div class="meta">All of it dealt with outside, in the warmth of a hot sun, and preferably stone naked. This is why the house needs a big terrace and a Caesar Index of at least two.</div></div></div>
     </div>
   </div>
 </section>
@@ -651,107 +633,110 @@ window.PARTY_DB = {
 })();
 </script>
 
+
+
+
+
+
+
+
+
+
+
 <script>
-(function(){
+document.addEventListener('DOMContentLoaded', function(){
+  var DB = {
+    url: 'https://kyjrqpibtncvhxwcaovx.supabase.co/rest/v1/party40_kv',
+    key: 'sb_publishable_Q-XPiRdglnQscTd1Alh5UQ_hs4TWIsc',
+    h: function(extra){ var o = {'apikey': this.key, 'Authorization': 'Bearer ' + this.key, 'Content-Type': 'application/json'}; if(extra){ for(var k in extra) o[k]=extra[k]; } return o; },
+    list: async function(prefix){
+      var r = await fetch(this.url + '?k=like.' + encodeURIComponent(prefix) + '*&select=k,v&order=k', {headers: this.h()});
+      if(!r.ok) throw new Error('list ' + r.status);
+      return r.json();
+    },
+    set: async function(k, v){
+      var r = await fetch(this.url, {method:'POST', headers: this.h({'Prefer':'resolution=merge-duplicates'}), body: JSON.stringify([{k:k, v:v}])});
+      if(!r.ok) throw new Error('set ' + r.status);
+    },
+    del: async function(k){
+      var r = await fetch(this.url + '?k=eq.' + encodeURIComponent(k), {method:'DELETE', headers: this.h()});
+      if(!r.ok) throw new Error('del ' + r.status);
+    }
+  };
+  window.PARTY_DB = DB;
+
+  /* ---------- APPROVALS ---------- */
+  var bars = Array.prototype.slice.call(document.querySelectorAll('.appr'));
+  function keyOf(slug, name){ return 'appr:' + slug + ':' + name; }
+  function paintAppr(state){
+    bars.forEach(function(bar){
+      var slug = bar.getAttribute('data-house'), n = 0;
+      bar.querySelectorAll('.chip').forEach(function(ch){
+        var on = !!state[keyOf(slug, ch.getAttribute('data-n'))];
+        ch.classList.toggle('on', on); if(on) n++;
+      });
+      bar.querySelector('.count').textContent = n ? n + '/5' : '';
+    });
+  }
+  async function loadAppr(){
+    try{ var rows = await DB.list('appr:'); var st = {}; rows.forEach(function(r){ if(r.v === '1') st[r.k] = true; }); paintAppr(st); }
+    catch(e){ /* leave as-is */ }
+  }
+  bars.forEach(function(bar){
+    var slug = bar.getAttribute('data-house');
+    bar.querySelectorAll('.chip').forEach(function(ch){
+      ch.addEventListener('click', async function(){
+        var k = keyOf(slug, ch.getAttribute('data-n'));
+        var turningOn = !ch.classList.contains('on');
+        ch.classList.toggle('on', turningOn);           // optimistic
+        var bar2 = ch.closest('.appr');
+        try{
+          if(turningOn){ await DB.set(k, '1'); } else { await DB.del(k); }
+          loadAppr();
+        }catch(e){ ch.classList.toggle('on', !turningOn); alert('Could not save your tap. Check connection and try again.'); }
+      });
+    });
+  });
+
+  /* ---------- COMMENTS ---------- */
   var list = document.getElementById('comment-list');
   var nameEl = document.getElementById('c-name');
   var textEl = document.getElementById('c-text');
   var btn = document.getElementById('c-post');
   var status = document.getElementById('c-status');
-  var hasStorage = typeof window.storage !== 'undefined';
-  var localComments = [];
-
-  function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
-  function render(comments){
-    if(!comments.length){list.innerHTML='<div style="color:var(--muted);font-size:14px">No comments yet. Be the first to claim a bedroom.</div>';return;}
+  function esc(t){ var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+  function renderC(comments){
+    if(!comments.length){ list.innerHTML = '<div style="color:var(--muted);font-size:14px">No comments yet. Be the first.</div>'; return; }
     list.innerHTML = comments.map(function(c){
-      var when = new Date(c.ts).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) + ' ' + new Date(c.ts).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
+      var d = new Date(c.ts);
+      var when = d.toLocaleDateString('en-AU',{day:'numeric',month:'short'}) + ' ' + d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
       return '<div style="background:var(--card);border:1px solid var(--line);padding:14px 16px;max-width:640px">'
-        + '<div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:4px"><strong style="font-family:\'Bricolage Grotesque\',sans-serif">'+esc(c.name)+'</strong>'
-        + '<span style="font-family:\'Spline Sans Mono\',monospace;font-size:11px;color:var(--muted)">'+when+'</span></div>'
-        + '<div style="font-size:14.5px">'+esc(c.text)+'</div></div>';
+        + '<div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:4px"><strong style="font-family:\'Bricolage Grotesque\',sans-serif">' + esc(c.name) + '</strong>'
+        + '<span style="font-family:\'Spline Sans Mono\',monospace;font-size:11px;color:var(--muted)">' + when + '</span></div>'
+        + '<div style="font-size:14.5px">' + esc(c.text) + '</div></div>';
     }).join('');
   }
-  async function load(){
-    try{
-      var rows = await window.PARTY_DB.list('cmt:');
-      var out = [];
-      rows.forEach(function(r){ try{ out.push(JSON.parse(r.v)); }catch(e){} });
-      out.sort(function(a,b){return a.ts-b.ts;});
-      render(out);
-    }catch(e){ render(localComments); }
+  async function loadC(){
+    try{ var rows = await DB.list('cmt:'); var out = []; rows.forEach(function(r){ try{ out.push(JSON.parse(r.v)); }catch(e){} }); out.sort(function(a,b){return a.ts-b.ts;}); renderC(out); }
+    catch(e){ renderC([]); }
   }
-  btn.addEventListener('click', async function(){
-    var name = nameEl.value.trim(), text = textEl.value.trim();
-    if(!name || !text){ status.textContent='Name and comment both required.'; return; }
-    var c = {name:name, text:text, ts:Date.now()};
-    btn.disabled = true; status.textContent='Posting...';
-    try{ await window.PARTY_DB.set('cmt:'+c.ts+'-'+Math.random().toString(36).slice(2,7), JSON.stringify(c)); localComments.push(c); }
-    catch(e){ status.textContent='Could not save. Try again.'; btn.disabled=false; return; }
-    textEl.value=''; status.textContent='Posted.'; btn.disabled=false;
-    load();
-  });
-  load();
-})();
-</script>
-
-
-
-
-
-<script>
-(function(){
-  var bars = Array.prototype.slice.call(document.querySelectorAll('.appr'));
-  var hasStorage = typeof window.storage !== 'undefined';
-  var local = {};   // fallback when opened as a plain file
-
-  function keyOf(slug, name){ return 'appr:' + slug + ':' + name; }
-
-  function paint(state){
-    bars.forEach(function(bar){
-      var slug = bar.getAttribute('data-house');
-      var n = 0;
-      bar.querySelectorAll('.chip').forEach(function(ch){
-        var on = !!state[keyOf(slug, ch.getAttribute('data-n'))];
-        ch.classList.toggle('on', on);
-        if(on) n++;
-      });
-      bar.querySelector('.count').textContent = n ? n + '/5' : '';
+  if(btn){
+    btn.addEventListener('click', async function(){
+      var name = nameEl.value.trim(), text = textEl.value.trim();
+      if(!name || !text){ status.textContent = 'Name and comment both required.'; return; }
+      var c = {name:name, text:text, ts:Date.now()};
+      btn.disabled = true; status.textContent = 'Posting...';
+      try{ await DB.set('cmt:' + c.ts + '-' + Math.random().toString(36).slice(2,7), JSON.stringify(c)); textEl.value = ''; status.textContent = 'Posted.'; loadC(); }
+      catch(e){ status.textContent = 'Could not save. Try again.'; }
+      btn.disabled = false;
     });
   }
 
-  async function load(){
-    try{
-      var rows = await window.PARTY_DB.list('appr:');
-      var state = {};
-      rows.forEach(function(r){ if(r.v === '1') state[r.k] = true; });
-      paint(state);
-    }catch(e){ paint(local); }
-  }
-
-  bars.forEach(function(bar){
-    var slug = bar.getAttribute('data-house');
-    bar.querySelectorAll('.chip').forEach(function(ch){
-      ch.addEventListener('click', async function(){
-        var name = ch.getAttribute('data-n');
-        var k = keyOf(slug, name);
-        var turningOn = !ch.classList.contains('on');
-        ch.disabled = true;
-        try{
-          if(turningOn){ await window.PARTY_DB.set(k, '1'); }
-          else{ await window.PARTY_DB.del(k); }
-          if(turningOn) local[k] = true; else delete local[k];
-        }catch(e){ ch.disabled = false; return; }
-        ch.disabled = false;
-        load();
-      });
-    });
-  });
-
-  load();
-})();
+  /* ---------- initial load + gentle live refresh ---------- */
+  loadAppr(); loadC();
+  setInterval(function(){ if(document.visibilityState === 'visible'){ loadAppr(); loadC(); } }, 15000);
+});
 </script>
 
-<script>setInterval(function(){ if(document.visibilityState==="visible" && window.PARTY_DB){ document.dispatchEvent(new Event("party-refresh")); } }, 20000);</script>
 </body>
 </html>
