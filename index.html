@@ -173,6 +173,27 @@
     .btn{padding:13px 18px}
   }
 </style>
+
+<script>
+// live backend: Supabase REST (anon key is public-by-design)
+window.PARTY_DB = {
+  url: 'https://kyjrqpibtncvhxwcaovx.supabase.co/rest/v1/party40_kv',
+  key: 'sb_publishable_Q-XPiRdglnQscTd1Alh5UQ_hs4TWIsc',
+  headers: function(){ return {'apikey': this.key, 'Authorization': 'Bearer '+this.key, 'Content-Type': 'application/json'}; },
+  list: async function(prefix){
+    var r = await fetch(this.url+'?k=like.'+encodeURIComponent(prefix)+'*&select=k,v&order=k', {headers: this.headers()});
+    return r.ok ? r.json() : [];
+  },
+  set: async function(k, v){
+    var r = await fetch(this.url, {method:'POST', headers: Object.assign(this.headers(), {'Prefer':'resolution=merge-duplicates'}), body: JSON.stringify([{k:k, v:v}])});
+    if(!r.ok) throw new Error('set failed '+r.status);
+  },
+  del: async function(k){
+    var r = await fetch(this.url+'?k=eq.'+encodeURIComponent(k), {method:'DELETE', headers: this.headers()});
+    if(!r.ok) throw new Error('del failed '+r.status);
+  }
+};
+</script>
 </head>
 <body>
 
@@ -539,7 +560,7 @@
 <section id="comments-section">
   <div class="wrap">
     <h2>Have your say</h2>
-    <p class="sub">Leave your pick, your dates, or your objections. Comments are visible to everyone with this link.</p>
+    <p class="sub">Leave your pick, your dates, or your objections. Comments and approvals save live; everyone with the link sees the same board.</p>
     <div id="comment-list" style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px"></div>
     <div style="background:var(--card);border:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:10px;max-width:640px">
       <input id="c-name" placeholder="Your name" maxlength="40" style="font-family:'Instrument Sans',sans-serif;font-size:15px;padding:11px 12px;border:1.5px solid var(--line);background:#fff">
@@ -652,27 +673,21 @@
     }).join('');
   }
   async function load(){
-    if(!hasStorage){ render(localComments); status.textContent='Comments save to the shared page when this is viewed on the published Claude link. Opened as a plain file, they last this session only.'; return; }
     try{
-      var res = await window.storage.list('comments:', true);
-      var keys = (res && res.keys) ? res.keys.sort() : [];
+      var rows = await window.PARTY_DB.list('cmt:');
       var out = [];
-      for (var i=0;i<keys.length;i++){
-        try{ var r = await window.storage.get(keys[i], true); if(r && r.value) out.push(JSON.parse(r.value)); }catch(e){}
-      }
+      rows.forEach(function(r){ try{ out.push(JSON.parse(r.v)); }catch(e){} });
       out.sort(function(a,b){return a.ts-b.ts;});
       render(out);
-    }catch(e){ render([]); }
+    }catch(e){ render(localComments); }
   }
   btn.addEventListener('click', async function(){
     var name = nameEl.value.trim(), text = textEl.value.trim();
     if(!name || !text){ status.textContent='Name and comment both required.'; return; }
     var c = {name:name, text:text, ts:Date.now()};
     btn.disabled = true; status.textContent='Posting...';
-    if(hasStorage){
-      try{ await window.storage.set('comments:'+c.ts+'-'+Math.random().toString(36).slice(2,7), JSON.stringify(c), true); }
-      catch(e){ status.textContent='Could not save. Try again.'; btn.disabled=false; return; }
-    } else { localComments.push(c); }
+    try{ await window.PARTY_DB.set('cmt:'+c.ts+'-'+Math.random().toString(36).slice(2,7), JSON.stringify(c)); localComments.push(c); }
+    catch(e){ status.textContent='Could not save. Try again.'; btn.disabled=false; return; }
     textEl.value=''; status.textContent='Posted.'; btn.disabled=false;
     load();
   });
@@ -706,14 +721,12 @@
   }
 
   async function load(){
-    if(!hasStorage){ paint(local); return; }
     try{
-      var res = await window.storage.list('appr:', true);
-      var keys = (res && res.keys) ? res.keys : [];
+      var rows = await window.PARTY_DB.list('appr:');
       var state = {};
-      keys.forEach(function(k){ state[k] = true; });
+      rows.forEach(function(r){ if(r.v === '1') state[r.k] = true; });
       paint(state);
-    }catch(e){ paint({}); }
+    }catch(e){ paint(local); }
   }
 
   bars.forEach(function(bar){
@@ -724,14 +737,11 @@
         var k = keyOf(slug, name);
         var turningOn = !ch.classList.contains('on');
         ch.disabled = true;
-        if(hasStorage){
-          try{
-            if(turningOn){ await window.storage.set(k, '1', true); }
-            else{ try{ await window.storage.delete(k, true); }catch(e){} }
-          }catch(e){ ch.disabled = false; return; }
-        } else {
+        try{
+          if(turningOn){ await window.PARTY_DB.set(k, '1'); }
+          else{ await window.PARTY_DB.del(k); }
           if(turningOn) local[k] = true; else delete local[k];
-        }
+        }catch(e){ ch.disabled = false; return; }
         ch.disabled = false;
         load();
       });
@@ -742,5 +752,6 @@
 })();
 </script>
 
+<script>setInterval(function(){ if(document.visibilityState==="visible" && window.PARTY_DB){ document.dispatchEvent(new Event("party-refresh")); } }, 20000);</script>
 </body>
 </html>
